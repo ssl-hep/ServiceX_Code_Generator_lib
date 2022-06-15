@@ -31,44 +31,6 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
-import os
-
-from flask import Flask
-from flask_restful import Api
-
-from servicex_codegen.post_operation import GeneratedCode
-
-
-def handle_invalid_usage(error: BaseException):
-    from flask import jsonify
-    response = jsonify({"message": str(error)})
-    response.status_code = 400
-    return response
-
-
-def create_app(test_config=None, provided_translator=None):
-    """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
-
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    if not test_config:
-        app.config.from_envvar('APP_CONFIG_FILE')
-    else:
-        app.config.from_mapping(test_config)
-
-    with app.app_context():
-        translator = provided_translator
-
-        api = Api(app)
-        GeneratedCode.make_api(translator)
-
-        api.add_resource(GeneratedCode, '/servicex/generated-code')
-
-    app.errorhandler(Exception)(handle_invalid_usage)
-
-    return app
+#
+#
+#

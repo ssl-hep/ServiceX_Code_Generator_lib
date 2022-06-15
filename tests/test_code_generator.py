@@ -31,44 +31,40 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
+import io
 import os
+import zipfile
+from tempfile import TemporaryDirectory
 
-from flask import Flask
-from flask_restful import Api
-
-from servicex_codegen.post_operation import GeneratedCode
-
-
-def handle_invalid_usage(error: BaseException):
-    from flask import jsonify
-    response = jsonify({"message": str(error)})
-    response.status_code = 400
-    return response
+from servicex_codegen.code_generator import CodeGenerator, GeneratedFileResult
 
 
-def create_app(test_config=None, provided_translator=None):
-    """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
+def get_zipfile_data(zip_data: bytes):
+    with zipfile.ZipFile(io.BytesIO(zip_data)) as thezip:
+        for zipinfo in thezip.infolist():
+            with thezip.open(zipinfo) as thefile:
+                yield zipinfo.filename, thefile
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
-    if not test_config:
-        app.config.from_envvar('APP_CONFIG_FILE')
-    else:
-        app.config.from_mapping(test_config)
+def check_zip_file(zip_data: bytes, expected_file_count):
+    names = []
+    for name, data in get_zipfile_data(zip_data):
+        names.append(name)
+        print(name)
+    assert len(names) == expected_file_count
 
-    with app.app_context():
-        translator = provided_translator
 
-        api = Api(app)
-        GeneratedCode.make_api(translator)
+class TestCodeGenerator:
+    def test_translate_query_to_zip(self, mocker):
+        mocker.patch.object(CodeGenerator, "__abstractmethods__", new_callable=set)
+        code_gen = CodeGenerator()
 
-        api.add_resource(GeneratedCode, '/servicex/generated-code')
+        with TemporaryDirectory() as tempdir, \
+                open(os.path.join(tempdir, "baz.txt"), 'w'),\
+                open(os.path.join(tempdir, "foo.txt"), 'w'):
+            code_gen.generate_code = mocker.Mock(
+                return_value=GeneratedFileResult(hash="31415", output_dir=tempdir)
+            )
 
-    app.errorhandler(Exception)(handle_invalid_usage)
-
-    return app
+            zip_bytes = code_gen.translate_query_to_zip("select * from foo")
+            check_zip_file(zip_bytes, expected_file_count=2)
