@@ -31,6 +31,8 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
+from tempfile import TemporaryDirectory
+
 from flask import request, Response
 from flask_restful import Resource
 from servicex_codegen.code_generator import CodeGenerator
@@ -44,14 +46,15 @@ class GeneratedCode(Resource):
 
     def post(self):
         try:
-            code = request.data.decode('utf8')
-            zip_data = self.code_generator.generate_code(code)
+            with TemporaryDirectory() as tempdir:
+                code = request.data.decode('utf8')
+                zip_data = self.code_generator.generate_code(code, cache_path=tempdir)
 
-            # Send the response back to you-know-what.
-            response = Response(
-                response=zip_data,
-                status=200, mimetype='application/octet-stream')
-            return response
+                # Send the response back to you-know-what.
+                response = Response(
+                    response=zip_data,
+                    status=200, mimetype='application/octet-stream')
+                return response
         except BaseException as e:
             print(str(e))
             import traceback
