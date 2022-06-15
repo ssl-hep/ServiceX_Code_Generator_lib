@@ -67,7 +67,13 @@ setup(
     install_requires=[
         "Flask==1.1.2",
         "Flask-RESTful==0.3.8",
-        "Flask-WTF==0.14.3"
+        "Flask-WTF==0.14.3",
+        # Incompatibility between flask and the latest itsdangerous
+        "itsdangerous==2.0.1",
+        # Avoid import error in Flask
+        "werkzeug==2.0.3",
+        "jinja2==3.0.3"
+
     ],
     extras_require={
         "test": [
