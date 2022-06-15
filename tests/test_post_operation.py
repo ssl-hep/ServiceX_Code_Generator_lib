@@ -46,7 +46,10 @@ class TestPostOperation:
 
         response = client.post("/servicex/generated-code", data=select_stmt)
         assert response.status_code == 200
-        mock_ast_translator.generate_code.assert_called_with(select_stmt)
+        # Capture the temporary directory that was generated
+        cache_dir = mock_ast_translator.generate_code.call_args[1]['cache_path']
+        mock_ast_translator.generate_code.assert_called_with(select_stmt,
+                                                             cache_path=cache_dir)
 
     def test_post_codegen_error_query(self, mocker):
         """Post a query with a code-gen level error"""
