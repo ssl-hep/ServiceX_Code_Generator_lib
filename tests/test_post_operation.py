@@ -25,27 +25,53 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import io
+import os
+import zipfile
+from tempfile import TemporaryDirectory
 
 from servicex_codegen import create_app
-from servicex_codegen.code_generator import GenerateCodeException
+from servicex_codegen.code_generator import GenerateCodeException, GeneratedFileResult
+
+
+def get_zipfile_data(zip_data: bytes):
+    with zipfile.ZipFile(io.BytesIO(zip_data)) as thezip:
+        for zipinfo in thezip.infolist():
+            with thezip.open(zipinfo) as thefile:
+                yield zipinfo.filename, thefile
+
+
+def check_zip_file(zip_data: bytes, expected_file_count):
+    names = []
+    for name, data in get_zipfile_data(zip_data):
+        names.append(name)
+        print(name)
+    assert len(names) == expected_file_count
 
 
 class TestPostOperation:
     def test_post_good_query(self, mocker):
         """Produce code for a simple good query"""
 
-        mock_ast_translator = mocker.Mock()
-        mock_ast_translator.generate_code = mocker.Mock(return_value="hi")
+        with TemporaryDirectory() as tempdir, \
+                open(os.path.join(tempdir, "baz.txt"), 'w'),\
+                open(os.path.join(tempdir, "foo.txt"), 'w'):
 
-        config = {
-            'TARGET_BACKEND': 'uproot'
-        }
-        app = create_app(config, provided_translator=mock_ast_translator)
-        client = app.test_client()
-        select_stmt = "(call ResultTTree (call Select (call SelectMany (call EventDataset (list 'localds://did_01')"  # noqa: E501
+            mock_ast_translator = mocker.Mock()
+            mock_ast_translator.generate_code = mocker.Mock(
+                return_value=GeneratedFileResult(hash="1234", output_dir=tempdir)
+            )
 
-        response = client.post("/servicex/generated-code", data=select_stmt)
+            config = {
+                'TARGET_BACKEND': 'uproot'
+            }
+            app = create_app(config, provided_translator=mock_ast_translator)
+            client = app.test_client()
+            select_stmt = "(call ResultTTree (call Select (call SelectMany (call EventDataset (list 'localds://did_01')"  # noqa: E501
+
+            response = client.post("/servicex/generated-code", data=select_stmt)
         assert response.status_code == 200
+        check_zip_file(response.data, 2)
         # Capture the temporary directory that was generated
         cache_dir = mock_ast_translator.generate_code.call_args[1]['cache_path']
         mock_ast_translator.generate_code.assert_called_with(select_stmt,
