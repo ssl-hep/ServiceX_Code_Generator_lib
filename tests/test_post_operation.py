@@ -31,7 +31,8 @@ import zipfile
 from tempfile import TemporaryDirectory
 
 from servicex_codegen import create_app
-from servicex_codegen.code_generator import GenerateCodeException, GeneratedFileResult
+from servicex_codegen.code_generator import (GenerateCodeException,
+                                             GeneratedFileResult)
 
 
 def get_zipfile_data(zip_data: bytes):
