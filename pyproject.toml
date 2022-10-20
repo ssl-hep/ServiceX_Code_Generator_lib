@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "servicex_code_gen_lib"
-version = "1.0.1"
+version = "1.1.0-alpha.1"
 description = "Library for creating ServiceX Code Generators"
 authors = ["Ben Galewsky <bengal1@illinois.edu>"]
 readme = "README.md"
 packages = [{include = "servicex_codegen"}]
 
 [tool.poetry.dependencies]
-python = "~3.8"
+python = "~3.7"
 Flask = "^2.2.2"
 Flask-RESTful = "^0.3.9"
 Flask-WTF = "^1.0.1"
