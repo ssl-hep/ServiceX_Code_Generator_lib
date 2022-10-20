@@ -37,8 +37,3 @@ jobs:
       if: github.event_name == 'push'
       run: |
         poetry run codecov --token=${{ secrets.CODECOV_TOKEN }}
-    - name: Get version
-      id: vars
-      run: echo ::set-output name=version::$(cat pyproject.toml)
-    - name: Test output
-      run: echo ${{ steps.vars.outputs.version }}
