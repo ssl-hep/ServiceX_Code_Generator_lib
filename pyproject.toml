@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "servicex_code_gen_lib"
+name = "servicex-code-gen-lib"
 version = "1.1.0-alpha.1"
 description = "Library for creating ServiceX Code Generators"
 authors = ["Ben Galewsky <bengal1@illinois.edu>"]
