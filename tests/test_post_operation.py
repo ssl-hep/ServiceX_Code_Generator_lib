@@ -29,7 +29,6 @@ import io
 import os
 import zipfile
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
 
 from requests_toolbelt.multipart import decoder
 from servicex_codegen import create_app
