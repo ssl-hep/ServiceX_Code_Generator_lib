@@ -33,13 +33,13 @@
 #
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Api
+
 from servicex_codegen.post_operation import GeneratedCode
 
 
 def handle_invalid_usage(error: BaseException):
-    from flask import jsonify
     response = jsonify({"message": str(error)})
     response.status_code = 400
     return response

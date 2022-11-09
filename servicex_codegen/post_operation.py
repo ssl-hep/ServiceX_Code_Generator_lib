@@ -35,8 +35,10 @@ import os
 import zipfile
 from tempfile import TemporaryDirectory
 
-from flask import request, Response
+from flask import Response, current_app, request
 from flask_restful import Resource
+from requests_toolbelt import MultipartEncoder
+
 from servicex_codegen.code_generator import CodeGenerator, GeneratedFileResult
 
 
@@ -83,18 +85,29 @@ class GeneratedCode(Resource):
     def post(self):
         try:
             with TemporaryDirectory() as tempdir:
-                code = request.data.decode('utf8')
-                generated_code_result = self.code_generator.generate_code(code, cache_path=tempdir)
+                body = request.get_json()
+                generated_code_result = self.code_generator.generate_code(
+                    body["code"], cache_path=tempdir)
 
                 zip_data = self.stream_generated_code(generated_code_result)
+                transformer_image = body["transformer_image"] if "transformer_image" in body else current_app.config.get(
+                    "DEFAULT_TRANSFORMER_IMAGE")
+                transformer_tag = body["transformer_tag"] if "transformer_tag" in body else current_app.config.get(
+                    "DEFAULT_TRANSFORMER_TAG")
                 # Send the response back to you-know-what.
+
+                m = MultipartEncoder(
+                    fields={'transformer_image': transformer_image, 'transformer_tag': transformer_tag,
+                            'zip_data': zip_data}
+                )
+
                 response = Response(
-                    response=zip_data,
-                    status=200, mimetype='application/octet-stream')
+                    response=m.to_string(),
+                    status=200, mimetype=m.content_type)
                 return response
         except BaseException as e:
             print(str(e))
-            import traceback
             import sys
+            import traceback
             traceback.print_exc(file=sys.stdout)
             return {'Message': str(e)}, 500
