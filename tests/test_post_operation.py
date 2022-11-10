@@ -31,6 +31,7 @@ import zipfile
 from tempfile import TemporaryDirectory
 
 from requests_toolbelt.multipart import decoder
+
 from servicex_codegen import create_app
 from servicex_codegen.code_generator import (GenerateCodeException,
                                              GeneratedFileResult)
@@ -80,7 +81,7 @@ class TestPostOperation:
                 "code": select_stmt
             })
 
-        boundary = str(response.data[2:34], 'utf-8')
+        boundary = response.data[2:34].decode('utf-8')
         content_type = f"multipart/form-data; boundary={boundary}"
         decoder_parts = decoder.MultipartDecoder(response.data, content_type)
 
