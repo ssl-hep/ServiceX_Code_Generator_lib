@@ -76,8 +76,7 @@ class TestPostOperation:
             select_stmt = "(call ResultTTree (call Select (call SelectMany (call EventDataset (list 'localds://did_01')"  # noqa: E501
 
             response = client.post("/servicex/generated-code", json={
-                "transformer_image": "sslhep/servicex_func_adl_xaod_transformer",
-                "transformer_tag": "develop",
+                "transformer_image": "sslhep/servicex_func_adl_xaod_transformer:develop",
                 "code": select_stmt
             })
 
@@ -86,11 +85,9 @@ class TestPostOperation:
         decoder_parts = decoder.MultipartDecoder(response.data, content_type)
 
         transformer_image = str(decoder_parts.parts[0].content, 'utf-8')
-        transformer_tag = str(decoder_parts.parts[1].content, 'utf-8')
-        zip_file = decoder_parts.parts[2].content
+        zip_file = decoder_parts.parts[1].content
 
         print("Transformer Image: ", transformer_image)
-        print("Transformer Tag: ", transformer_tag)
         print("Zip File: ", zip_file)
 
         assert response.status_code == 200
@@ -114,8 +111,7 @@ class TestPostOperation:
 
             config = {
                 'TARGET_BACKEND': 'uproot',
-                'DEFAULT_TRANSFORMER_IMAGE': 'sslhep/servicex_func_adl_xaod_transformer',
-                'DEFAULT_TRANSFORMER_TAG': 'develop'
+                'TRANSFORMER_DEFAULT_IMAGE': 'sslhep/servicex_func_adl_xaod_transformer:develop',
             }
 
             app = create_app(config, provided_translator=mock_ast_translator)
@@ -134,11 +130,9 @@ class TestPostOperation:
             decoder_parts = decoder.MultipartDecoder(response.data, content_type)
 
             transformer_image = str(decoder_parts.parts[0].content, 'utf-8')
-            transformer_tag = str(decoder_parts.parts[1].content, 'utf-8')
-            zip_file = decoder_parts.parts[2].content
+            zip_file = decoder_parts.parts[1].content
 
             print("Transformer Image: ", transformer_image)
-            print("Transformer Tag: ", transformer_tag)
             print("Zip File: ", zip_file)
 
         assert response.status_code == 200

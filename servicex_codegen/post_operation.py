@@ -91,13 +91,11 @@ class GeneratedCode(Resource):
 
                 zip_data = self.stream_generated_code(generated_code_result)
                 transformer_image = body["transformer_image"] if "transformer_image" in body else current_app.config.get(
-                    "DEFAULT_TRANSFORMER_IMAGE")
-                transformer_tag = body["transformer_tag"] if "transformer_tag" in body else current_app.config.get(
-                    "DEFAULT_TRANSFORMER_TAG")
+                    "TRANSFORMER_DEFAULT_IMAGE")
                 # Send the response back to you-know-what.
 
                 m = MultipartEncoder(
-                    fields={'transformer_image': transformer_image, 'transformer_tag': transformer_tag,
+                    fields={'transformer_image': transformer_image,
                             'zip_data': zip_data}
                 )
 
