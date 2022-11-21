@@ -111,7 +111,7 @@ class TestPostOperation:
 
             config = {
                 'TARGET_BACKEND': 'uproot',
-                'TRANSFORMER_DEFAULT_IMAGE': 'sslhep/servicex_func_adl_xaod_transformer:develop',
+                'TRANSFORMER_SCIENCE_IMAGE': 'sslhep/servicex_func_adl_xaod_transformer:develop',
             }
 
             app = create_app(config, provided_translator=mock_ast_translator)
