@@ -90,9 +90,11 @@ class GeneratedCode(Resource):
                     body["code"], cache_path=tempdir)
 
                 zip_data = self.stream_generated_code(generated_code_result)
+                # code gen transformer returns the default transformer image mentioned in the config file
                 transformer_image = current_app.config.get("TRANSFORMER_SCIENCE_IMAGE")
                 # Send the response back to you-know-what.
 
+                # MultipartEncoder library takes multiple types of data fields and merge them into a multipart mime data type
                 m = MultipartEncoder(
                     fields={'transformer_image': transformer_image,
                             'zip_data': zip_data}
