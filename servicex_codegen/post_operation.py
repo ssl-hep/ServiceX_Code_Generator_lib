@@ -90,8 +90,7 @@ class GeneratedCode(Resource):
                     body["code"], cache_path=tempdir)
 
                 zip_data = self.stream_generated_code(generated_code_result)
-                transformer_image = body["transformer_image"] if "transformer_image" in body else current_app.config.get(
-                    "TRANSFORMER_SCIENCE_IMAGE")
+                transformer_image = current_app.config.get("TRANSFORMER_SCIENCE_IMAGE")
                 # Send the response back to you-know-what.
 
                 m = MultipartEncoder(
@@ -103,6 +102,7 @@ class GeneratedCode(Resource):
                     response=m.to_string(),
                     status=200, mimetype=m.content_type)
                 return response
+
         except BaseException as e:
             print(str(e))
             import sys
