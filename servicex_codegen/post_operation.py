@@ -92,7 +92,7 @@ class GeneratedCode(Resource):
                 zip_data = self.stream_generated_code(generated_code_result)
                 # code gen transformer returns the default transformer image mentioned in
                 # the config file
-                transformer_image = current_app.config.get("TRANSFORMER_SCIENCE_IMAGE")
+                transformer_image = os.environ.get("TRANSFORMER_SCIENCE_IMAGE")
 
                 # MultipartEncoder library takes multiple types of data fields and merge
                 # them into a multipart mime data type
