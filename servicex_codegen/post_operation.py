@@ -94,7 +94,6 @@ class GeneratedCode(Resource):
                 # the config file
                 transformer_image = os.environ.get('TRANSFORMER_SCIENCE_IMAGE')
                 print(transformer_image)
-                print(os.environ['TRANSFORMER_SCIENCE_IMAGE'])
 
                 # MultipartEncoder library takes multiple types of data fields and merge
                 # them into a multipart mime data type
