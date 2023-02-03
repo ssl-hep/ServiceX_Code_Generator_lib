@@ -59,6 +59,7 @@ def create_app(test_config=None, provided_translator=None):
         app.config.from_mapping(test_config)
     else:
         if 'CODEGEN_CONFIG_FILE' in os.environ:
+            print('Read Transformer Image on Init: ',os.environ.get('TRANSFORMER_SCIENCE_IMAGE'))
             app.config.from_envvar('CODEGEN_CONFIG_FILE')
 
     with app.app_context():
