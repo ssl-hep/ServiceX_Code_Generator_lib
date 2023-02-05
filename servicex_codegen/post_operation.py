@@ -36,7 +36,7 @@ import os
 import zipfile
 from tempfile import TemporaryDirectory
 
-from flask import Response, request, current_app
+from flask import Response, current_app, request
 from flask_restful import Resource
 from requests_toolbelt import MultipartEncoder
 

@@ -61,8 +61,6 @@ def create_app(test_config=None, provided_translator=None):
         if 'CODEGEN_CONFIG_FILE' in os.environ:
             app.config.from_envvar('CODEGEN_CONFIG_FILE')
 
-        app.config['TRANSFORMER_SCIENCE_IMAGE'] = os.environ.get('TRANSFORMER_SCIENCE_IMAGE')
-
     with app.app_context():
         translator = provided_translator
 
