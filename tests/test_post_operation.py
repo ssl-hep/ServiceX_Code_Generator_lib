@@ -66,7 +66,8 @@ class TestPostOperation:
             )
 
             config = {
-                'TARGET_BACKEND': 'uproot'
+                'TARGET_BACKEND': 'uproot',
+                'TRANSFORMER_SCIENCE_IMAGE': "foo/bar:latest"
             }
             app = create_app(config, provided_translator=mock_ast_translator)
             client = app.test_client()
