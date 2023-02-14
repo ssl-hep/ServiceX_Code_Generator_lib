@@ -26,7 +26,7 @@
 #   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-
+import json
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -85,6 +85,10 @@ class GeneratedCode(Resource):
 
     def post(self):
         try:
+            with open("transformer_capabilities.json") as capabilities_file:
+                capabilities = json.load(capabilities_file)
+                print("capable", capabilities['language'], capabilities['command'])
+
             with TemporaryDirectory() as tempdir:
                 body = request.get_json()
                 generated_code_result = self.code_generator.generate_code(
@@ -99,6 +103,8 @@ class GeneratedCode(Resource):
                 # them into a multipart mime data type
                 m = MultipartEncoder(
                     fields={'transformer_image': transformer_image,
+                            'language': capabilities['language'],
+                            'command': capabilities['command'],
                             'zip_data': zip_data}
                 )
 
