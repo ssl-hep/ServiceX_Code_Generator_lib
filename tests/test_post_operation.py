@@ -86,7 +86,7 @@ class TestPostOperation:
         decoder_parts = decoder.MultipartDecoder(response.data, content_type)
 
         transformer_image = str(decoder_parts.parts[0].content, 'utf-8')
-        zip_file = decoder_parts.parts[1].content
+        zip_file = decoder_parts.parts[3].content
 
         print("Transformer Image: ", transformer_image)
         print("Zip File: ", zip_file)
@@ -131,7 +131,7 @@ class TestPostOperation:
             decoder_parts = decoder.MultipartDecoder(response.data, content_type)
 
             transformer_image = str(decoder_parts.parts[0].content, 'utf-8')
-            zip_file = decoder_parts.parts[1].content
+            zip_file = decoder_parts.parts[3].content
 
             print("Transformer Image: ", transformer_image)
             print("Zip File: ", zip_file)
