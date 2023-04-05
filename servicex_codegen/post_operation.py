@@ -84,27 +84,27 @@ class GeneratedCode(Resource):
 
     def post(self):
         try:
-            with TemporaryDirectory() as tempdir:
-                body = request.get_json()
-                generated_code_result = self.code_generator.generate_code(
-                    body["code"], cache_path=tempdir)
+            # with TemporaryDirectory() as tempdir:
+            body = request.get_json()
+            generated_code_result = self.code_generator.generate_code(
+                body["code"], cache_path="/tmp")
+            print(generated_code_result)
+            zip_data = self.stream_generated_code(generated_code_result)
+            # code gen transformer returns the default transformer image mentioned in
+            # the config file
+            transformer_image = current_app.config.get("TRANSFORMER_SCIENCE_IMAGE")
 
-                zip_data = self.stream_generated_code(generated_code_result)
-                # code gen transformer returns the default transformer image mentioned in
-                # the config file
-                transformer_image = current_app.config.get("TRANSFORMER_SCIENCE_IMAGE")
+            # MultipartEncoder library takes multiple types of data fields and merge
+            # them into a multipart mime data type
+            m = MultipartEncoder(
+                fields={'transformer_image': transformer_image,
+                        'zip_data': zip_data}
+            )
 
-                # MultipartEncoder library takes multiple types of data fields and merge
-                # them into a multipart mime data type
-                m = MultipartEncoder(
-                    fields={'transformer_image': transformer_image,
-                            'zip_data': zip_data}
-                )
-
-                response = Response(
-                    response=m.to_string(),
-                    status=200, mimetype=m.content_type)
-                return response
+            response = Response(
+                response=m.to_string(),
+                status=200, mimetype=m.content_type)
+            return response
 
         except BaseException as e:
             print(str(e))
