@@ -7,14 +7,15 @@ readme = "README.md"
 packages = [{include = "servicex_codegen"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Flask = "^2.2.2"
+python = "^3.10"
+Flask = "^2.3.2"
 Flask-RESTful = "^0.3.9"
 Flask-WTF = "^1.0.1"
 itsdangerous = "^2.1.2"
 Werkzeug = "^2.2.2"
 Jinja2 = "^3.1.2"
 requests-toolbelt = "^0.10.1"
+urllib3 = "1.26.15"
 
 [tool.poetry.group.test]
 optional = true
