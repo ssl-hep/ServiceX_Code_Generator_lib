@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "servicex_codegen"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 Flask = "^2.3.3"
 Flask-RESTful = "^0.3.9"
 Flask-WTF = "^1.0.1"
