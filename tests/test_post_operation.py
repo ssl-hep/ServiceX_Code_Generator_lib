@@ -57,7 +57,7 @@ class TestPostOperation:
         """Produce code for a simple good query"""
 
         with TemporaryDirectory() as tempdir, \
-                open(os.path.join(tempdir, "baz.txt"), 'w'),\
+                open(os.path.join(tempdir, "baz.txt"), 'w'), \
                 open(os.path.join(tempdir, "foo.txt"), 'w'):
 
             mock_ast_translator = mocker.Mock()
@@ -102,7 +102,7 @@ class TestPostOperation:
         """Produce code for a simple good query"""
 
         with TemporaryDirectory() as tempdir, \
-                open(os.path.join(tempdir, "baz.txt"), 'w'),\
+                open(os.path.join(tempdir, "baz.txt"), 'w'), \
                 open(os.path.join(tempdir, "foo.txt"), 'w'):
 
             mock_ast_translator = mocker.Mock()
