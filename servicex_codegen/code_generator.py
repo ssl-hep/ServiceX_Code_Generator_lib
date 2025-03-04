@@ -1,4 +1,4 @@
-#  Copyright (c) 2022 , IRIS-HEP
+#  Copyright (c) 2022-2025, IRIS-HEP
 #   All rights reserved.
 #
 #   Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,15 @@
 # modification, are permitted provided that the following conditions are met:
 #
 from abc import ABC, abstractmethod
-from collections import namedtuple
+from dataclasses import dataclass
+from typing import Optional
 
-GeneratedFileResult = namedtuple('GeneratedFileResult', 'hash output_dir')
+
+@dataclass
+class GeneratedFileResult:
+    hash: str
+    output_dir: str
+    image: Optional[str] = None
 
 
 class GenerateCodeException(BaseException):
@@ -47,5 +53,5 @@ class GenerateCodeException(BaseException):
 class CodeGenerator(ABC):
 
     @abstractmethod
-    def generate_code(self, query, cache_path: str):
+    def generate_code(self, query, cache_path: str) -> GeneratedFileResult:
         pass

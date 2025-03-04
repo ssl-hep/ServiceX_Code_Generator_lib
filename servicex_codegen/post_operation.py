@@ -1,4 +1,4 @@
-#  Copyright (c) 2022 , IRIS-HEP
+#  Copyright (c) 2022-2025, IRIS-HEP
 #   All rights reserved.
 #
 #   Redistribution and use in source and binary forms, with or without
@@ -97,7 +97,9 @@ class GeneratedCode(Resource):
                 zip_data = self.stream_generated_code(generated_code_result)
                 # code gen transformer returns the default transformer image mentioned in
                 # the config file
-                transformer_image = current_app.config['TRANSFORMER_SCIENCE_IMAGE']
+                transformer_image = (generated_code_result.image
+                                     if generated_code_result.image is not None
+                                     else current_app.config['TRANSFORMER_SCIENCE_IMAGE'])
 
                 # MultipartEncoder library takes multiple types of data fields and merge
                 # them into a multipart mime data type
