@@ -14,8 +14,8 @@ Flask-WTF = "^1.0.1"
 itsdangerous = "^2.1.2"
 Werkzeug = "^3.0.4"
 Jinja2 = "^3.1.2"
-requests-toolbelt = "^0.10.1"
-urllib3 = "^1.26.19"
+requests-toolbelt = "^1.0.0"
+urllib3 = "^2.5.0"
 
 [tool.poetry.group.test]
 optional = true
